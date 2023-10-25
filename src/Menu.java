@@ -1,16 +1,22 @@
+import auxiliar.Auxiliar;
+import models.Dados;
+import models.Formulas;
+import models.ValorPeso;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Menu {
+    File tempDir = new File(System.getProperty("user.dir") + File.separator + "temp");
+    File mediaPonderadaTemp = new File("temp/tempMediaPonderada");
+
     public void menu() {
         System.out.println("BEM-VINDO AO PROGRAMA DE CALCULO DE PROBABILIDADE E INFERÊNCIA ESTATÍSTICA! ");
         System.out.println();
         while (true) {
             boolean fechar = false;
             Dados dados = new Dados();
-            File tempDir = new File(System.getProperty("user.dir") + File.separator + "temp");
-            File mediaPonderadaTemp = new File("temp/tempMediaPonderada");
             Auxiliar aux = new Auxiliar();
             Formulas formulas = new Formulas();
 
@@ -35,12 +41,12 @@ public class Menu {
             switch (opcao) {
                 case 1:
                     quantidadeDeDados = aux.lerInt("Digite a quantidade de dados do conjunto que você possui: ");
-                    dados.criaArrDoubleEGrava(quantidadeDeDados, tempDir);
+                    dados.criaArrDoubleEGrava(tempDir);
                     System.out.println();
                     break;
 
                 case 2:
-                    arr = selecionaERecuperaArray(tempDir);
+                    arr = aux.selecionaERecuperaArray(tempDir);
                     quantidadeDeClasses = aux.lerInt("Digite a quantidade de Classes que você deseja: ");
                     ArrayList<Double> limitesInferiores = formulas.limitesInferiores(arr, quantidadeDeClasses);
                     ArrayList<Double> limitesSuperiores = formulas.limitesSuperiores(limitesInferiores, arr, quantidadeDeClasses);
@@ -54,7 +60,7 @@ public class Menu {
                     break;
 
                 case 3:
-                    arr = selecionaERecuperaArray(tempDir);
+                    arr = aux.selecionaERecuperaArray(tempDir);
 
                     System.out.println("MÉDIA: " + formulas.calcularMedia(arr));
                     System.out.println("MEDIANA: " + formulas.calcularMediana(arr));
@@ -69,14 +75,14 @@ public class Menu {
                     break;
 
                 case 5:
-                    valorEPeso = selecionaERecuperaArrayValorPeso(mediaPonderadaTemp);
+                    valorEPeso = aux.selecionaERecuperaArrayValorPeso(mediaPonderadaTemp);
                     double mediaPonderada = formulas.calcularMediaPonderada(valorEPeso);
                     System.out.println("MÉDIA PONDERADA: " + mediaPonderada);
                     System.out.println();
                     break;
 
                 case 6:
-                    arr = selecionaERecuperaArray(tempDir);
+                    arr = aux.selecionaERecuperaArray(tempDir);
                     double amplitude = Collections.max(arr) - Collections.min(arr);
                     ArrayList<Double> desvios = formulas.desvios(arr);
                     ArrayList<Double> quadrados = formulas.quadrados(desvios);
@@ -87,7 +93,7 @@ public class Menu {
                     break;
 
                 case 7:
-                    arr = selecionaERecuperaArray(tempDir);
+                    arr = aux.selecionaERecuperaArray(tempDir);
                     desvios = formulas.desvios(arr);
                     quadrados = formulas.quadrados(desvios);
 
@@ -97,7 +103,7 @@ public class Menu {
                     break;
 
                 case 8:
-                    valorEPeso = selecionaERecuperaArrayValorPeso(mediaPonderadaTemp);
+                    valorEPeso = aux.selecionaERecuperaArrayValorPeso(mediaPonderadaTemp);
                     ArrayList<Double> valorXFrequencia = formulas.valoresVezesFrequencias(valorEPeso);
                     ArrayList<Double> valorMenosMedia = formulas.valorMenosMedia(valorEPeso);
                     ArrayList<Double> issoAoQuadrado = formulas.quadrados(valorMenosMedia);
@@ -121,62 +127,6 @@ public class Menu {
         }
     }
 
-    public ArrayList<Double> selecionaERecuperaArray(File tempDir) {
-        Auxiliar aux = new Auxiliar();
-        Dados dados = new Dados();
-        File[] files = tempDir.listFiles(File::isFile);
-        if (files == null || files.length == 0) {
-            System.out.println("Não há arquivos no diretório.");
-            return new ArrayList<>(); // Retorna uma lista vazia se não houver arquivos.
-        }
 
-        System.out.println("Selecione algum dos conjuntos de dados a seguir: ");
-        for (int i = 0; i < files.length; i++) {
-            System.out.println((i + 1) + " - " + files[i].getName());
-        }
-
-        int opcao3;
-        while (true) {
-            opcao3 = aux.lerInt("Selecione o número correspondente: ");
-            if (opcao3 > 0 && opcao3 <= files.length) {
-                break;
-            }
-            System.out.println("Opção inválida. Por favor, selecione novamente.");
-        }
-
-        File arquivoSelecionado = dados.verificaSeArquivoExiste(opcao3, tempDir);
-        int qntDados = dados.contaQuantidadeDeDados(arquivoSelecionado);
-        ArrayList<Double> arr = dados.recuperaDadosArrDouble(qntDados, arquivoSelecionado.getAbsolutePath());
-        return arr;
-    }
-
-    public ArrayList<ValorPeso> selecionaERecuperaArrayValorPeso(File tempDir) {
-        Auxiliar aux = new Auxiliar();
-        Dados dados = new Dados();
-        File[] files = tempDir.listFiles(File::isFile);
-        if (files == null || files.length == 0) {
-            System.out.println("Não há arquivos no diretório.");
-            return new ArrayList<>(); // Retorna uma lista vazia se não houver arquivos.
-        }
-
-        System.out.println("Selecione algum dos conjuntos de dados a seguir: ");
-        for (int i = 0; i < files.length; i++) {
-            System.out.println((i + 1) + " - " + files[i].getName());
-        }
-
-        int opcao3;
-        while (true) {
-            opcao3 = aux.lerInt("Selecione o número correspondente: ");
-            if (opcao3 > 0 && opcao3 <= files.length) {
-                break;
-            }
-            System.out.println("Opção inválida. Por favor, selecione novamente.");
-        }
-
-        File arquivoSelecionado = dados.verificaSeArquivoExiste(opcao3, tempDir);
-        int qntDados = dados.contaQuantidadeDeDados(arquivoSelecionado);
-        ArrayList<ValorPeso> arr = dados.recuperaDadosArrDoubleParaMediaPonderada(qntDados, arquivoSelecionado.getAbsolutePath());
-        return arr;
-    }
 }
 

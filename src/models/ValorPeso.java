@@ -1,3 +1,5 @@
+package models;
+
 public class ValorPeso {
     private double valor;
     private double peso;

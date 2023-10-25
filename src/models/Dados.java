@@ -1,8 +1,12 @@
+package models;
+
+import auxiliar.Auxiliar;
+
 import java.io.*;
 import java.util.ArrayList;
 
 public class Dados {
-    public void criaArrDoubleEGrava(int quantidadeDeDados, File tempDir) {
+    public void criaArrDoubleEGrava(File tempDir) {
         Auxiliar aux = new Auxiliar();
         ArrayList<Double> arr = new ArrayList<>();
 
@@ -14,6 +18,8 @@ public class Dados {
             String nomeDoArquivo = aux.lerString("Digite um nome para o arquivo a ser salvo temporariamente: ");
             FileOutputStream arq = new FileOutputStream(tempDir + File.separator + nomeDoArquivo + ".dat");
             DataOutputStream gravarArq = new DataOutputStream(arq);
+
+            int quantidadeDeDados = aux.lerInt("Digite a quantidade de dados existentes: ");
 
             for (int i = 0; i < quantidadeDeDados; i++) {
                 double dado = aux.lerDouble("Digite o valor " + (i + 1) + ": ");

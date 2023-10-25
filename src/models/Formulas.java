@@ -1,3 +1,5 @@
+package models;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.*;
@@ -163,7 +165,7 @@ public class Formulas {
         return moda;
     }
 
-    public double calcularMediaPonderada(ArrayList<ValorPeso> arr) {
+    public static double calcularMediaPonderada(ArrayList<ValorPeso> arr) {
         double somaProduto = 0;
         double somaPesos = 0;
 
@@ -189,7 +191,7 @@ public class Formulas {
         return desvios;
     }
 
-    public ArrayList<Double> quadrados(ArrayList<Double> desvios){
+    public static ArrayList<Double> quadrados(ArrayList<Double> desvios){
         ArrayList<Double> quadrados = new ArrayList<>();
 
         for (Double valor : desvios){
@@ -200,7 +202,7 @@ public class Formulas {
         return quadrados;
     }
 
-    public double varianciaPopulacional(ArrayList<Double> quadrados, double amplitude){
+    public static double varianciaPopulacional(ArrayList<Double> quadrados, double amplitude){
         double somaDosQuadrados = 0;
         for (Double quadrado : quadrados){
             somaDosQuadrados += quadrado;
@@ -209,12 +211,12 @@ public class Formulas {
         return Math.round(somaDosQuadrados/amplitude);
     }
 
-    public double desvioPadraoPopulacional(ArrayList<Double> quadrados, double amplitude){
+    public static double desvioPadraoPopulacional(ArrayList<Double> quadrados, double amplitude){
         double varianciaPopulacional = varianciaPopulacional(quadrados, amplitude);
         return Math.round(Math.sqrt(varianciaPopulacional));
     }
 
-    public double varianciaAmostral(ArrayList<Double> quadrados){
+    public static double varianciaAmostral(ArrayList<Double> quadrados){
         int quantidadeDeElementos = quadrados.size();
         double somaDosQuadrados = 0;
         for (Double quadrado : quadrados){
@@ -224,12 +226,12 @@ public class Formulas {
         return Math.round(somaDosQuadrados/(quantidadeDeElementos-1));
     }
 
-    public double desvioPadraoAmostral(ArrayList<Double> quadrados){
+    public static double desvioPadraoAmostral(ArrayList<Double> quadrados){
         double varianciaAmostral = varianciaAmostral(quadrados);
         return Math.round(Math.sqrt(varianciaAmostral));
     }
 
-    public ArrayList<Double> valoresVezesFrequencias(ArrayList<ValorPeso> valorPeso){
+    public static ArrayList<Double> valoresVezesFrequencias(ArrayList<ValorPeso> valorPeso){
         ArrayList<Double> valoresVezesFrequencias = new ArrayList<>();
         for (int i = 0; i < valorPeso.size(); i++){
             double resultados = valorPeso.get(i).getValor() * valorPeso.get(i).getPeso();
@@ -238,7 +240,7 @@ public class Formulas {
         return valoresVezesFrequencias;
     }
 
-    public double somaDasFrequencias(ArrayList<ValorPeso> valorPeso){
+    public static double somaDasFrequencias(ArrayList<ValorPeso> valorPeso){
         double somaAsFrequencias = 0;
         for (ValorPeso valorePeso : valorPeso){
             somaAsFrequencias += valorePeso.getPeso();
@@ -246,7 +248,7 @@ public class Formulas {
         return somaAsFrequencias;
     }
 
-    public double mediaAmostral(ArrayList<ValorPeso> valorPeso){
+    public static double mediaAmostral(ArrayList<ValorPeso> valorPeso){
         ArrayList<Double> valorFrequencia = valoresVezesFrequencias(valorPeso);
         double resultados = 0;
         for (Double valor : valorFrequencia){
@@ -257,7 +259,7 @@ public class Formulas {
         return (resultados/somaFrequencias);
     }
 
-    public ArrayList<Double> valorMenosMedia(ArrayList<ValorPeso> valorPeso){
+    public static ArrayList<Double> valorMenosMedia(ArrayList<ValorPeso> valorPeso){
         ArrayList<Double> valorMenosMedia = new ArrayList<>();
         double mediaAmostral = mediaAmostral(valorPeso);
         for (ValorPeso valorEPeso : valorPeso){
@@ -267,7 +269,7 @@ public class Formulas {
         return valorMenosMedia;
     }
 
-    public ArrayList<Double> quadradoVezesFrequencia(ArrayList<ValorPeso> valorPesos){
+    public static ArrayList<Double> quadradoVezesFrequencia(ArrayList<ValorPeso> valorPesos){
         ArrayList<Double> quadradoVezesFrequencia = new ArrayList<>();
         ArrayList<Double> valorMensMedia = valorMenosMedia(valorPesos);
         ArrayList<Double> quadrados = quadrados(valorMensMedia);
@@ -279,7 +281,7 @@ public class Formulas {
         return quadradoVezesFrequencia;
     }
 
-    public double desvioPadraoAmostralComPesos(ArrayList<ValorPeso> valorPesos){
+    public static double desvioPadraoAmostralComPesos(ArrayList<ValorPeso> valorPesos){
         ArrayList<Double> quadradoVezesFrequencia = quadradoVezesFrequencia(valorPesos);
         double amostrasMenosUm = somaDasFrequencias(valorPesos) - 1;
         double somatoria = 0;

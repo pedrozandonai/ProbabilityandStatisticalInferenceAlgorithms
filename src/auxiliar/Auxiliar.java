@@ -1,6 +1,12 @@
+package auxiliar;
+
+import models.Dados;
+import models.ValorPeso;
+
+import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Auxiliar {
@@ -83,4 +89,80 @@ public class Auxiliar {
         System.out.println("+----------+--------+------+-------+----------------+------------------+");
     }
 
+    public ArrayList<Double> selecionaERecuperaArray(File tempDir) {
+        Auxiliar aux = new Auxiliar();
+        Dados dados = new Dados();
+        File[] files = tempDir.listFiles(File::isFile);
+        if (files == null || files.length == 0) {
+            System.out.println("Não há arquivos no diretório.");
+            return new ArrayList<>(); // Retorna uma lista vazia se não houver arquivos.
+        }
+
+        System.out.println("Selecione algum dos conjuntos de dados a seguir: ");
+        for (int i = 0; i < files.length; i++) {
+            System.out.println((i + 1) + " - " + files[i].getName());
+        }
+
+        int opcao3;
+        while (true) {
+            opcao3 = aux.lerInt("Ou digite 0 para criar\nSelecione o número correspondente: ");
+            if (opcao3 > 0 && opcao3 <= files.length) {
+                break;
+            } else if (opcao3 == 0) {
+                dados.criaArrDoubleEGrava(tempDir);
+                selecionaERecuperaArray(tempDir);
+            }
+            System.out.println("Opção inválida. Por favor, selecione novamente.");
+        }
+
+
+        File arquivoSelecionado = dados.verificaSeArquivoExiste(opcao3, tempDir);
+        int qntDados = dados.contaQuantidadeDeDados(arquivoSelecionado);
+        ArrayList<Double> arr = dados.recuperaDadosArrDouble(qntDados, arquivoSelecionado.getAbsolutePath());
+        return arr;
+    }
+
+    public ArrayList<ValorPeso> selecionaERecuperaArrayValorPeso(File tempDir) {
+        Auxiliar aux = new Auxiliar();
+        Dados dados = new Dados();
+        File[] files = tempDir.listFiles(File::isFile);
+        if (files == null || files.length == 0) {
+            System.out.println("Não há arquivos no diretório.");
+            return new ArrayList<>(); // Retorna uma lista vazia se não houver arquivos.
+        }
+
+        System.out.println("Selecione algum dos conjuntos de dados a seguir: ");
+        for (int i = 0; i < files.length; i++) {
+            System.out.println((i + 1) + " - " + files[i].getName());
+        }
+
+        int opcao3;
+        while (true) {
+            opcao3 = aux.lerInt("Selecione o número correspondente: ");
+            if (opcao3 > 0 && opcao3 <= files.length) {
+                break;
+            }
+            System.out.println("Opção inválida. Por favor, selecione novamente.");
+        }
+
+        File arquivoSelecionado = dados.verificaSeArquivoExiste(opcao3, tempDir);
+        int qntDados = dados.contaQuantidadeDeDados(arquivoSelecionado);
+        ArrayList<ValorPeso> arr = dados.recuperaDadosArrDoubleParaMediaPonderada(qntDados, arquivoSelecionado.getAbsolutePath());
+        return arr;
+    }
+
+    public String formatarNumeroUmaCasaDecimal(double numero) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.0");
+        return decimalFormat.format(numero);
+    }
+
+    public String formatarNumeroDuasCasasDecimais(double numero){
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return decimalFormat.format(numero);
+    }
+
+    public String formatarNumeroTresCasasDecimais(double numero){
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
+        return decimalFormat.format(numero);
+    }
 }
